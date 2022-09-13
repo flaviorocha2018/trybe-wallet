@@ -2,9 +2,11 @@
 export const ADD_USER = 'ADD_USER';
 export const ADD_WALLET = 'ADD_WALLET';
 export const GET_CURRENCIES = 'GET_CURRENCIES';
-export const SEND_EXPENSES = 'SEND_EXPENSES';
+export const SAVE_EXPENSES = 'SAVE_EXPENSES';
 export const GET_ACTUALQUOTATION = 'GET_ACTUALQUOTATION';
-export const DELETE_EXPENSES = 'REMOVE_EXPENSES';
+export const DELETE_EXPENSES = 'DELETE_EXPENSES';
+export const EDIT_EXPENSES = 'EDIT_EXPENSES';
+export const EDIT_TRUE = 'EDIT_TRUE';
 
 export function addUserAction(email) {
   return {
@@ -17,6 +19,15 @@ export const deleteExpenses = (id) => ({
   type: DELETE_EXPENSES,
   id,
 });
+export const editTrue = (state) => ({
+  type: EDIT_TRUE,
+  payload: state,
+});
+
+export const editExpense = (state) => ({
+  type: EDIT_EXPENSES,
+  payload: state,
+});
 
 export function addWalletAction(state) {
   return {
@@ -26,7 +37,7 @@ export function addWalletAction(state) {
 }
 
 export const saveExpenses = (expenses) => ({
-  type: SEND_EXPENSES,
+  type: SAVE_EXPENSES,
   expenses,
 });
 
@@ -52,3 +63,18 @@ export const fetchCurrencies = () => async (dispatch) => {
     console.log(error);
   }
 };
+export const fetchCurrencyActual = (expenses) => (
+  async (dispatch) => {
+    try {
+      const request = await fetch('https://economia.awesomeapi.com.br/json/all');
+      const response = await request.json();
+      const newObject = {
+        exchangeRates: response,
+        ...expenses,
+      };
+      dispatch(saveExpenses(newObject));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
